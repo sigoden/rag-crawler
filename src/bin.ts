@@ -4,7 +4,7 @@ import { program } from "commander";
 import { RequestInit } from "node-fetch";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import path from "node:path";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 
 import { CrawlOptions, Page, crawlPage } from "./index.js";
 
@@ -38,7 +38,7 @@ async function main() {
   }
   const data = JSON.stringify(pages, null, 2);
   if (outPath) {
-    if (outPath.endsWith(".json")) {
+    if (existsSync(outPath) || outPath.endsWith(".json")) {
       mkdirSync(path.dirname(outPath), { recursive: true });
       writeFileSync(outPath, data);
     } else {
