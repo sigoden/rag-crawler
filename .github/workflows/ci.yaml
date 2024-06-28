@@ -34,9 +34,9 @@ jobs:
 
     - run: corepack enable
 
-    - name: npm install
+    - run: npm install
 
-    - name: npm run build
+    - run: npm run build
 
     - name: Test crawler
       run: node dist/bin.js https://sigoden.github.io/mynotes/languages/
