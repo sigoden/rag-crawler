@@ -24,13 +24,13 @@ Arguments:
 Options:
   --max-connections <number>  Maximum concurrent connections (default: 5)
   -e, --exclude <names>       Comma-separated list of path names to exclude
-  --no-markdown               Don't convert crawled html to markdown
+  --no-markdown               Don't convert crawled HTML to Markdown
   --no-log                    Disable logging
   -V, --version               output the version number
   -h, --help                  display help for command
 ```
 
-**Output knowledge.json to stdout**
+**Output to stdout**
 ```
 $ rag-crawler https://sigoden.github.io/mynotes/languages/ 
 [
@@ -46,7 +46,7 @@ $ rag-crawler https://sigoden.github.io/mynotes/languages/
 ]
 ```
 
-**Output to knowledge.json**
+**Output to JSON file**
 ```
 $ rag-crawler https://sigoden.github.io/mynotes/languages/ knowledge.json
 ```
@@ -65,6 +65,11 @@ pages
     │   ├── rust.md
     │   └── shell.md
     └── languages.md
+```
+
+**Crawler github wiki**
+```
+$ rag-crawler https://github.com/sigoden/aichat/wiki wiki.json --exclude _history
 ```
 
 **Crawler markdown files from github repo**

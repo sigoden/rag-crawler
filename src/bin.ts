@@ -72,7 +72,7 @@ program
     "Comma-separated list of path names to exclude",
     (value: string) => value.split(","),
   )
-  .option("--no-markdown", "Don't convert crawled html to markdown")
+  .option("--no-markdown", "Don't convert crawled HTML to Markdown")
   .option("--no-log", "Disable logging")
   .version("1.0.0");
 
