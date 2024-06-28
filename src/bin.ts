@@ -9,7 +9,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { CrawlOptions, Page, crawlPage } from "./index.js";
 
 async function main() {
-  const { maxConnections, markdown, log, exclude } = program.opts();
+  const { extract, maxConnections, markdown, log, exclude } = program.opts();
   const [startUrl, outPath] = program.args;
   const fetchOptions: RequestInit = {
     headers: {
@@ -23,9 +23,10 @@ async function main() {
   }
   let options: Partial<CrawlOptions> = {
     maxConnections,
+    extract,
     exclude: exclude || [],
-    toMarkdown: markdown,
-    logEnabled: log,
+    toMarkdown: !!markdown,
+    logEnabled: !!log,
     fetchOptions,
   };
   if (!outPath) {
@@ -61,6 +62,10 @@ program
   .name("rag-crawler")
   .argument("<startUrl>", "The URL to start crawling from. [required]")
   .argument("[outPath]", "The output path. If omitted, output to stdout")
+  .option(
+    "--extract <css-selector>",
+    "Extract specific content using a CSS selector"
+  )
   .option(
     "--max-connections <number>",
     "Maximum concurrent connections",
