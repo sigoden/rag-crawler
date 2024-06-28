@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { program } from "commander";
 import { RequestInit } from "node-fetch";
 import { HttpsProxyAgent } from "https-proxy-agent";
@@ -56,7 +58,7 @@ async function main() {
 }
 
 program
-  .name("raw-crawler")
+  .name("rag-crawler")
   .argument("<startUrl>", "The URL to start crawling from. [required]")
   .argument("[outPath]", "The output path. If omitted, output to stdout")
   .option(
@@ -71,7 +73,8 @@ program
     (value: string) => value.split(","),
   )
   .option("--no-markdown", "Don't convert crawled html to markdown")
-  .option("--no-log", "Disable logging");
+  .option("--no-log", "Disable logging")
+  .version("0.1.0");
 
 program.parse();
 
