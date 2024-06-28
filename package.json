@@ -1,6 +1,6 @@
 {
   "name": "rag-crawler",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "sigoden <sigoden@gmail.com>",
   "description": "Crawl a website to generate knowledge file for RAG",
   "main": "dist/index.js",
