@@ -13,6 +13,10 @@ turndownService.remove("script");
  */
 export interface CrawlOptions {
   /**
+   * Extract specific content using CSS selector
+   */
+  extract?: string,
+  /**
    * Whether to convert crawled html to markdown.
    */
   toMarkdown: boolean;
@@ -195,17 +199,25 @@ async function getLinksFromUrl(
     }
   });
 
-  links = [...new Set(links)];
-
   let text = html;
+  if (options.extract) {
+    text = $(options.extract)?.html()
+    if (!text) {
+      return {
+        path,
+        text: "",
+        links: []
+      }
+    }
+  }
   if (options.toMarkdown) {
-    text = turndownService.turndown(html);
+    text = turndownService.turndown(text);
   }
 
   return {
     path,
     text,
-    links,
+    links: [...new Set(links)],
   };
 }
 

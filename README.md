@@ -22,6 +22,7 @@ Arguments:
   outPath                     The output path. If omitted, output to stdout
 
 Options:
+  --extract <css-selector>    Extract specific content using a CSS selector
   --max-connections <number>  Maximum concurrent connections (default: 5)
   -e, --exclude <names>       Comma-separated list of path names to exclude
   --no-markdown               Don't convert crawled HTML to Markdown
@@ -69,7 +70,7 @@ pages
 
 **Crawler github wiki**
 ```
-$ rag-crawler https://github.com/sigoden/aichat/wiki wiki.json --exclude _history
+$ rag-crawler https://github.com/sigoden/aichat/wiki wiki.json --exclude _history --extract '#wiki-body'
 ```
 
 **Crawler markdown files from github repo**
