@@ -79,7 +79,7 @@ program
   )
   .option("--no-markdown", "Don't convert crawled HTML to Markdown")
   .option("--no-log", "Disable logging")
-  .version("1.1.0");
+  .version("1.1.1");
 
 program.parse();
 
