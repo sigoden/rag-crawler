@@ -221,9 +221,5 @@ function shouldExcludeLink(exclude: string, link: string) {
 }
 
 function matchLink(path: string, link: string) {
-  if (link.endsWith("/")) {
-    return path === link || path === `${link}index.html`;
-  } else {
-    return path === link;
-  }
+  return path === link || path === link.replace(/\/index\.(html|htm)$/, "/");
 }
