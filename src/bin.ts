@@ -4,13 +4,7 @@ import { program } from "commander";
 import { RequestInit } from "node-fetch";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import path from "node:path";
-import {
-  existsSync,
-  fstat,
-  mkdirSync,
-  readFileSync,
-  writeFileSync,
-} from "node:fs";
+import { mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 
 import { CrawlOptions, Page, crawlPage } from "./index.js";
 import PRESET_LIST, { Preset } from "./preset.js";
@@ -66,10 +60,7 @@ async function main() {
   }
   const data = JSON.stringify(pages, null, 2);
   if (outPath) {
-    if (existsSync(outPath) || outPath.endsWith(".json")) {
-      mkdirSync(path.dirname(outPath), { recursive: true });
-      writeFileSync(outPath, data);
-    } else {
+    if (/(\/|\\)$/.test(outPath) || isDir(outPath)) {
       let ext = ".html";
       if (options.toMarkdown) {
         ext = ".md";
@@ -80,6 +71,9 @@ async function main() {
         mkdirSync(path.dirname(filePath), { recursive: true });
         writeFileSync(filePath, page.text);
       }
+    } else {
+      mkdirSync(path.dirname(outPath), { recursive: true });
+      writeFileSync(outPath, data);
     }
   } else {
     console.log(data);
@@ -134,6 +128,15 @@ function loadPresets(): Preset[] {
     }
   } catch {
     return PRESET_LIST;
+  }
+}
+
+function isDir(path: string): boolean {
+  try {
+    const stat = statSync(path);
+    return stat.isDirectory();
+  } catch {
+    return false;
   }
 }
 
