@@ -109,7 +109,7 @@ $ rag-crawler https://github.com/sigoden/aichat/wiki wiki.json --preset github-w
 // or
 $ rag-crawler https://github.com/sigoden/aichat/wiki wiki.json --preset auto
 // or
-$ rag-crawler https://github.com/sigoden/aichat/wiki wiki.json # The default value of '--preset' is 'auto'
+$ rag-crawler https://github.com/sigoden/aichat/wiki wiki.json # `--reset` default to 'auto'
 ```
 
 > When the preset is set to `auto`, rag-crawler will automatically determine the appropriate preset. It does this by checking if the `startUrl` matches the `test` regex.
