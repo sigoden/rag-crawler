@@ -3,7 +3,7 @@
 [![CI](https://github.com/sigoden/rag-crawler/actions/workflows/ci.yaml/badge.svg)](https://github.com/sigoden/rag-crawler/actions/workflows/ci.yaml)
 [![NPM Version](https://img.shields.io/npm/v/rag-crawler)](https://www.npmjs.com/package/rag-crawler)
 
-Crawl a website to generate knowledge file for RAG
+Crawl a website to generate knowledge file for RAG.
 
 ## Installation
 
@@ -22,7 +22,7 @@ Arguments:
   outPath                      The output path. If omitted, output to stdout
 
 Options:
-  --preset <value>             Use predefined crawl rules (default: "auto")
+  --preset <value>             Use predefined crawl options (default: "auto")
   -c, --max-connections <int>  Maximum concurrent connections to crawl
   -e, --exclude <values>       Comma-separated list of path names to exclude
   --extract <selector>         Extract specific content using a CSS selector
@@ -79,7 +79,7 @@ $ rag-crawler https://github.com/sigoden/mynotes/tree/main/src/languages/ knowle
 
 ## Preset
 
-A preset consists of predefined crawl rules. You can review the predefined presets at [./src/preset.ts](./src/preset.ts).
+A preset consists of predefined crawl options. You can review the predefined presets at [./src/preset.ts](./src/preset.ts).
 
 ### Why Use Presets?
 
@@ -116,7 +116,7 @@ $ rag-crawler https://github.com/sigoden/aichat/wiki wiki.json # `--reset` defau
 
 ### Custom Presets
 
-You can add custom presets by editing the `$HOME/.rag-crawler.json` file:
+You can add custom presets by editing the `~/.rag-crawler.json` file:
 
 ```json
 [

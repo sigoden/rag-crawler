@@ -141,7 +141,7 @@ program
   .name("rag-crawler")
   .argument("<startUrl>", "The URL to start crawling from. [required]")
   .argument("[outPath]", "The output path. If omitted, output to stdout")
-  .option("--preset <value>", "Use predefined crawl rules", "auto")
+  .option("--preset <value>", "Use predefined crawl options", "auto")
   .option(
     "-c, --max-connections <int>",
     "Maximum concurrent connections to crawl",
