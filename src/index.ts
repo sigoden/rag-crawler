@@ -15,7 +15,7 @@ export interface CrawlOptions {
   /**
    * Extract specific content using CSS selector
    */
-  extract?: string,
+  extract?: string;
   /**
    * Whether to convert crawled html to markdown.
    */
@@ -48,7 +48,7 @@ export interface CrawlOptions {
 }
 
 const IS_GITHUB_REPO =
-  /^https:\/\/github\.com\/([^\/]+)\/([^\/]+)\/tree\/([^\/]+)/;
+  /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/tree\/([^/]+)/;
 
 export async function* crawlPage(
   startUrl: string,
@@ -72,7 +72,6 @@ export async function* crawlPage(
 
   if (IS_GITHUB_REPO.test(startUrl)) {
     paths = await crawlGithubRepo(startUrlObj);
-    options.exclude.push("changelog");
   }
 
   let index = 0;
@@ -102,7 +101,7 @@ export async function* crawlPage(
     index += batch.length;
   }
   if (options.logEnabled) {
-    console.log("Crawl completed");
+    console.log("✨ Crawl completed");
   }
 }
 
@@ -155,7 +154,7 @@ async function getLinksFromUrl(
   const location = new URL(path, startUrl).toString();
 
   if (options.logEnabled) {
-    console.log(`Crawl ${location}`);
+    console.log(`🚀 Crawling ${location}`);
   }
 
   let html = "";
@@ -201,13 +200,13 @@ async function getLinksFromUrl(
 
   let text = html;
   if (options.extract) {
-    text = $(options.extract)?.html()
+    text = $(options.extract)?.html();
     if (!text) {
       return {
         path,
         text: "",
-        links: []
-      }
+        links: [],
+      };
     }
   }
   if (options.toMarkdown) {
