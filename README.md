@@ -81,7 +81,7 @@ $ rag-crawler https://github.com/sigoden/mynotes/tree/main/src/languages/ knowle
 
 A preset consists of predefined crawl options. You can review the predefined presets at [./src/preset.ts](./src/preset.ts).
 
-### Why Use Presets?
+### Why Use Preset?
 
 Let's use GitHub Wiki as an example. To enhance scraping quality, we need to configure both `--exclude` and `--extract`.
 
