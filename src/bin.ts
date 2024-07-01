@@ -15,7 +15,6 @@ async function main() {
     maxConnections,
     exclude = [],
     extract,
-    markdown,
     log,
   } = program.opts();
   const [startUrl, outPath] = program.args;
@@ -33,7 +32,6 @@ async function main() {
     maxConnections,
     exclude,
     extract,
-    toMarkdown: !!markdown,
     logEnabled: !!log,
     fetchOptions,
   };
@@ -45,13 +43,12 @@ async function main() {
     options.logEnabled = false;
   }
   if (options.logEnabled) {
-    console.log(`🕸️  Starting crawl of ${startUrl}`);
     console.log(
       `⚙️  maxConnections=${
         options.maxConnections
       } exclude='${options.exclude.join(",")}' extract='${
         options.extract || ""
-      }' toMarkdown=${options.toMarkdown}`,
+      }'`,
     );
   }
   const pages: Page[] = [];
@@ -61,13 +58,9 @@ async function main() {
   const data = JSON.stringify(pages, null, 2);
   if (outPath) {
     if (/(\/|\\)$/.test(outPath) || isDir(outPath)) {
-      let ext = ".html";
-      if (options.toMarkdown) {
-        ext = ".md";
-      }
       for (const page of pages) {
         let filePath = page.path.replace(/(\/|\.html)$/, "");
-        filePath = path.join(outPath, new URL(filePath).pathname + ext);
+        filePath = path.join(outPath, new URL(filePath).pathname + ".md");
         mkdirSync(path.dirname(filePath), { recursive: true });
         writeFileSync(filePath, page.text);
       }
@@ -159,7 +152,6 @@ program
     "--extract <selector>",
     "Extract specific content using a CSS selector",
   )
-  .option("--no-markdown", "Don't convert crawled HTML to Markdown")
   .option("--no-log", "Disable logging")
   .version("1.2.0");
 
