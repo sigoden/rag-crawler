@@ -16,10 +16,6 @@ export interface CrawlOptions {
    * Extract specific content using CSS selector
    */
   extract?: string;
-  /**
-   * Whether to convert crawled html to markdown.
-   */
-  toMarkdown: boolean;
 
   /**
    * Maximum number of concurrent connections allowed.
@@ -55,7 +51,6 @@ export async function* crawlPage(
   options_?: Partial<CrawlOptions>,
 ): AsyncGenerator<Page, any, Page> {
   const options: CrawlOptions = {
-    toMarkdown: true,
     maxConnections: 5,
     exclude: [],
     fetchOptions: {},
@@ -209,9 +204,7 @@ async function getLinksFromUrl(
       };
     }
   }
-  if (options.toMarkdown) {
-    text = turndownService.turndown(text);
-  }
+  text = turndownService.turndown(text);
 
   return {
     path,

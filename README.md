@@ -26,7 +26,6 @@ Options:
   -c, --max-connections <int>  Maximum concurrent connections to crawl
   -e, --exclude <values>       Comma-separated list of path names to exclude
   --extract <selector>         Extract specific content using a CSS selector
-  --no-markdown                Don't convert crawled HTML to Markdown
   --no-log                     Disable logging
   -V, --version                output the version number
   -h, --help                   display help for command
