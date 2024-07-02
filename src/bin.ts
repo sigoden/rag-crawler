@@ -153,7 +153,7 @@ program
     "Extract specific content using a CSS selector",
   )
   .option("--no-log", "Disable logging")
-  .version("1.2.0");
+  .version("1.3.0");
 
 program.parse();
 
