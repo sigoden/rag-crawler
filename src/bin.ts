@@ -10,13 +10,7 @@ import { CrawlOptions, Page, crawlPage } from "./index.js";
 import PRESET_LIST, { Preset } from "./preset.js";
 
 async function main() {
-  const {
-    preset,
-    maxConnections,
-    exclude = [],
-    extract,
-    log,
-  } = program.opts();
+  const { preset, maxConnections, exclude = [], extract, log } = program.opts();
   const [startUrl, outPath] = program.args;
   const fetchOptions: RequestInit = {
     headers: {
@@ -135,22 +129,34 @@ function isDir(path: string): boolean {
 
 program
   .name("rag-crawler")
-  .argument("<startUrl>", "The URL to start crawling from. [required]")
+  .description(
+    `Crawl a website to generate knowledge file for RAG
+    
+Examples:
+   rag-crawler https://sigoden.github.io/mynotes/languages/
+   rag-crawler https://sigoden.github.io/mynotes/languages/ data.json
+   rag-crawler https://sigoden.github.io/mynotes/languages/ pages/
+   rag-crawler https://github.com/sigoden/mynotes/tree/main/src/languages/`,
+  )
+  .argument(
+    "<startUrl>",
+    "The URL to start crawling from. Don't forget trailing slash. [required]",
+  )
   .argument("[outPath]", "The output path. If omitted, output to stdout")
   .option("--preset <value>", "Use predefined crawl options", "auto")
   .option(
     "-c, --max-connections <int>",
-    "Maximum concurrent connections to crawl",
+    "Maximum concurrent connections when crawling the pages",
     parseInt,
   )
   .option(
     "-e, --exclude <values>",
-    "Comma-separated list of path names to exclude",
+    "Comma-separated list of path names to exclude from crawling",
     (value: string) => value.split(","),
   )
   .option(
-    "--extract <selector>",
-    "Extract specific content using a CSS selector",
+    "--extract <css-selector>",
+    "Extract specific content using a CSS selector, If omitted, extract all content",
   )
   .option("--no-log", "Disable logging")
   .version("1.3.0");

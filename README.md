@@ -68,7 +68,7 @@ pages
     └── languages.md
 ```
 
-**Crawler markdown files from github repo**
+**Crawl Markdown files in GitHub Tree**
 
 ```
 $ rag-crawler https://github.com/sigoden/mynotes/tree/main/src/languages/ knowledge.json

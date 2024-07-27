@@ -59,11 +59,9 @@ export async function* crawlPage(
     ...(options_ || {}),
   };
 
-  if (!startUrl.endsWith("/")) {
-    startUrl += "/";
-  }
   const startUrlObj = new URL(startUrl);
   let paths: string[] = [startUrlObj.pathname];
+  startUrl = normalizeStartUrl(startUrl);
 
   if (IS_GITHUB_REPO.test(startUrl)) {
     paths = await crawlGithubRepo(startUrlObj);
@@ -222,6 +220,17 @@ function shouldExcludeLink(exclude: string, link: string) {
   } else {
     return exclude == name.replace(/\.[^.]+$/, "");
   }
+}
+
+function normalizeStartUrl(startUrl: string) {
+  const parsedUrl = new URL(startUrl);
+  parsedUrl.search = "";
+  parsedUrl.hash = "";
+  let lastSlashIndex = parsedUrl.pathname.lastIndexOf("/");
+  if (lastSlashIndex !== -1) {
+    parsedUrl.pathname = parsedUrl.pathname.substring(0, lastSlashIndex + 1);
+  }
+  return parsedUrl.toString();
 }
 
 function matchLink(path: string, link: string) {
