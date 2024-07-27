@@ -17,15 +17,23 @@ yarn add --global rag-crawler
 ```
 Usage: rag-crawler [options] <startUrl> [outPath]
 
+Crawl a website to generate knowledge file for RAG
+    
+Examples:
+   rag-crawler https://sigoden.github.io/mynotes/languages/
+   rag-crawler https://sigoden.github.io/mynotes/languages/ data.json
+   rag-crawler https://sigoden.github.io/mynotes/languages/ pages/
+   rag-crawler https://github.com/sigoden/mynotes/tree/main/src/languages/
+
 Arguments:
-  startUrl                     The URL to start crawling from. [required]
+  startUrl                     The URL to start crawling from. Don't forget trailing slash. [required]
   outPath                      The output path. If omitted, output to stdout
 
 Options:
   --preset <value>             Use predefined crawl options (default: "auto")
-  -c, --max-connections <int>  Maximum concurrent connections to crawl
-  -e, --exclude <values>       Comma-separated list of path names to exclude
-  --extract <selector>         Extract specific content using a CSS selector
+  -c, --max-connections <int>  Maximum concurrent connections when crawling the pages
+  -e, --exclude <values>       Comma-separated list of path names to exclude from crawling
+  --extract <css-selector>     Extract specific content using a CSS selector, If omitted, extract all content
   --no-log                     Disable logging
   -V, --version                output the version number
   -h, --help                   display help for command
