@@ -46,7 +46,7 @@ export interface CrawlOptions {
 const IS_GITHUB_REPO =
   /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/tree\/([^/]+)/;
 
-export async function* crawlPage(
+export async function* crawlWebsite(
   startUrl: string,
   options_?: Partial<CrawlOptions>,
 ): AsyncGenerator<Page, any, Page> {
@@ -64,16 +64,14 @@ export async function* crawlPage(
   startUrl = normalizeStartUrl(startUrl);
 
   if (IS_GITHUB_REPO.test(startUrl)) {
-    paths = await crawlGithubRepo(startUrlObj);
+    paths = await crawlGHTree(startUrlObj, options.exclude);
   }
 
   let index = 0;
   while (index < paths.length) {
     const batch = paths.slice(index, index + options.maxConnections);
 
-    const promises = batch.map((path) =>
-      getLinksFromUrl(startUrl, path, options),
-    );
+    const promises = batch.map((path) => crawlPage(startUrl, path, options));
 
     const results = await Promise.all(promises);
 
@@ -98,7 +96,7 @@ export async function* crawlPage(
   }
 }
 
-async function crawlGithubRepo(startUrl: URL) {
+async function crawlGHTree(startUrl: URL, exclude: string[]) {
   const octokit = new Octokit({
     auth: undefined,
   });
@@ -123,8 +121,9 @@ async function crawlGithubRepo(startUrl: URL) {
     .filter(
       (file) =>
         file.type === "blob" &&
-        file.path?.endsWith(".md") &&
-        file.path.startsWith(rootPath),
+        (file.path?.endsWith(".md") || file.path?.endsWith(".MD")) &&
+        file.path.startsWith(rootPath) &&
+        !shouldExcludeLink(file.path, exclude),
     )
     .map(
       (file) =>
@@ -139,25 +138,26 @@ export interface Page {
   text: string;
 }
 
-async function getLinksFromUrl(
+async function crawlPage(
   startUrl: string,
   path: string,
   options: CrawlOptions,
 ) {
   const location = new URL(path, startUrl).toString();
 
-  if (options.logEnabled) {
-    console.log(`🚀 Crawling ${location}`);
-  }
-
   let html = "";
 
   try {
     const response = await fetch(location, options.fetchOptions);
     html = await response.text();
+    if (options.logEnabled) {
+      console.log(`🚀 Crawled ${location}`);
+    }
   } catch (err) {
     if (options.breakOnError) {
       throw err;
+    } else if (options.logEnabled) {
+      console.error(err);
     }
   }
 
@@ -182,10 +182,7 @@ async function getLinksFromUrl(
     const parsedUrl = new URL(href, location);
     if (parsedUrl.toString().startsWith(startUrl)) {
       const link = parsedUrl.pathname;
-      if (
-        !link.includes("#") &&
-        !options.exclude.some((exclude) => shouldExcludeLink(exclude, link))
-      ) {
+      if (!shouldExcludeLink(link, options.exclude)) {
         links.push(link);
       }
     }
@@ -194,13 +191,6 @@ async function getLinksFromUrl(
   let text = html;
   if (options.extract) {
     text = $(options.extract)?.html();
-    if (!text) {
-      return {
-        path,
-        text: "",
-        links: [],
-      };
-    }
   }
   text = turndownService.turndown(text);
 
@@ -211,15 +201,27 @@ async function getLinksFromUrl(
   };
 }
 
-function shouldExcludeLink(exclude: string, link: string) {
+function shouldExcludeLink(link: string, exclude: string[]) {
+  if (link.includes("#")) {
+    return true;
+  }
   const parts = link.replace(/\/$/, "").split("/");
   let name = (parts[parts.length - 1] || "").toLowerCase();
-  exclude = exclude.toLowerCase();
-  if (/\.[^.]+$/.test(exclude)) {
-    return exclude == name;
-  } else {
-    return exclude == name.replace(/\.[^.]+$/, "");
+
+  for (const excludeName of exclude) {
+    let cond = false;
+    if (/\.[^.]+$/.test(excludeName)) {
+      cond = excludeName.toLowerCase() === name.toLowerCase();
+    } else {
+      cond =
+        excludeName.toLowerCase() ===
+        name.toLowerCase().replace(/\.[^.]+$/, "");
+    }
+    if (cond) {
+      return true;
+    }
   }
+  return false;
 }
 
 function normalizeStartUrl(startUrl: string) {
