@@ -6,7 +6,7 @@ import { HttpsProxyAgent } from "https-proxy-agent";
 import path from "node:path";
 import { mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 
-import { CrawlOptions, Page, crawlPage } from "./index.js";
+import { CrawlOptions, Page, crawlWebsite } from "./index.js";
 import PRESET_LIST, { Preset } from "./preset.js";
 
 async function main() {
@@ -46,7 +46,7 @@ async function main() {
     );
   }
   const pages: Page[] = [];
-  for await (const page of crawlPage(startUrl, options)) {
+  for await (const page of crawlWebsite(startUrl, options)) {
     pages.push(page);
   }
   const data = JSON.stringify(pages, null, 2);
