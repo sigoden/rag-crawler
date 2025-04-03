@@ -174,18 +174,19 @@ async function crawlPage(
   const $ = cheerio.load(html);
 
   $("a").each((_, element) => {
-    const href = $(element).attr("href");
-    if (!href) {
-      return;
-    }
-
-    const parsedUrl = new URL(href, location);
-    if (parsedUrl.toString().startsWith(startUrl)) {
-      const link = parsedUrl.pathname;
-      if (!shouldExcludeLink(link, options.exclude)) {
-        links.push(link);
+    try {
+      const href = $(element).attr("href");
+      if (!href || href.startsWith("#")) {
+        return;
       }
-    }
+      const parsedUrl = new URL(href, location);
+      if (parsedUrl.toString().startsWith(startUrl)) {
+        const link = parsedUrl.pathname;
+        if (!shouldExcludeLink(link, options.exclude)) {
+          links.push(link);
+        }
+      }
+    } catch {}
   });
 
   let text = html;
